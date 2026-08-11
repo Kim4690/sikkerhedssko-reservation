@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reservér din plads — Sikkerhedssko & Arbejdsbeklædning</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Arial Black', Arial, sans-serif;
+    background: #111;
+    color: #fff;
+    min-height: 100vh;
+  }
+
+  .hero {
+    background: #111;
+    border-bottom: 4px solid #f5c800;
+    padding: 36px 24px 32px;
+    text-align: center;
+  }
+  .hero-label {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #f5c800;
+    margin-bottom: 14px;
+    font-family: Arial, sans-serif;
+    font-weight: normal;
+  }
+  .hero-title {
+    font-size: clamp(28px, 6vw, 52px);
+    font-weight: 900;
+    line-height: 1.05;
+    text-transform: uppercase;
+    color: #fff;
+    margin-bottom: 6px;
+  }
+  .hero-title span { color: #f5c800; }
+  .hero-sub {
+    font-size: 14px;
+    color: #ccc;
+    font-family: Arial, sans-serif;
+    font-weight: normal;
+    margin-bottom: 24px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .hero-dates {
+    display: inline-flex;
+    gap: 24px;
+    background: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 6px;
+    padding: 14px 28px;
+    font-family: Arial, sans-serif;
+  }
+  .hero-date { text-align: center; }
+  .hero-date .d-label { font-size: 10px; color: #bbb; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+  .hero-date .d-val { font-size: 14px; font-weight: bold; color: #f5c800; }
+
+  .main {
+    max-width: 620px;
+    margin: 0 auto;
+    padding: 48px 24px 64px;
+  }
+
+  .reach-strip {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 40px;
+  }
+  .reach-item {
+    background: #1a1a1a;
+    border: 1px solid #2a2a2a;
+    border-top: 3px solid #f5c800;
+    border-radius: 4px;
+    padding: 16px 12px;
+    text-align: center;
+  }
+  .reach-num { font-size: 26px; font-weight: 900; color: #f5c800; line-height: 1; margin-bottom: 6px; }
+  .reach-txt { font-size: 11px; color: #ccc; font-family: Arial, sans-serif; font-weight: normal; line-height: 1.4; }
+
+  .section-label {
+    font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+    color: #f5c800; font-family: Arial, sans-serif; font-weight: normal; margin-bottom: 16px;
+  }
+
+  .formats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 36px;
+  }
+
+  .format-card {
+    border: 2px solid #2a2a2a;
+    border-radius: 6px;
+    padding: 20px 18px;
+    cursor: pointer;
+    position: relative;
+    background: #1a1a1a;
+  }
+
+  .format-check {
+    position: absolute;
+    top: 14px; right: 14px;
+    width: 20px; height: 20px;
+    border: 2px solid #444;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .format-check-dot {
+    width: 8px; height: 8px;
+    background: #111;
+    border-radius: 50%;
+    opacity: 0;
+  }
+
+  .format-card input[type="radio"] { position: absolute; opacity: 0; width: 0; height: 0; }
+  .format-name { font-size: 16px; font-weight: 900; color: #fff; margin-bottom: 4px; text-transform: uppercase; }
+  .format-type { font-size: 11px; color: #ccc; font-family: Arial, sans-serif; font-weight: normal; margin-bottom: 12px; }
+  .format-price { font-size: 22px; font-weight: 900; color: #f5c800; }
+  .format-price-sub { font-size: 10px; color: #aaa; font-family: Arial, sans-serif; font-weight: normal; margin-top: 2px; }
+
+  .format-card.locked-on  { border-color: #f5c800 !important; background: #1f1c00 !important; box-shadow: 0 0 14px 2px rgba(245,200,0,0.2) !important; }
+  .format-card.locked-off { border-color: #2a2a2a !important; background: #1a1a1a !important; box-shadow: none !important; }
+  .format-card.locked-on  .format-check { background: #f5c800 !important; border-color: #f5c800 !important; }
+  .format-card.locked-on  .format-check-dot { opacity: 1 !important; }
+  .format-card.locked-off .format-check { background: transparent !important; border-color: #444 !important; }
+  .format-card.locked-off .format-check-dot { opacity: 0 !important; }
+
+  .form-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px;
+  }
+  .form-grid .full { grid-column: 1 / -1; }
+
+  .field label {
+    display: block; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
+    color: #bbb; font-family: Arial, sans-serif; font-weight: normal; margin-bottom: 7px;
+  }
+  .field input {
+    width: 100%; background: #1a1a1a; border: 1px solid #333; border-radius: 4px;
+    padding: 12px 14px; font-size: 14px; color: #fff; font-family: Arial, sans-serif;
+    transition: border-color 0.15s; outline: none;
+  }
+  .field input:focus { border-color: #f5c800; }
+  .field input::placeholder { color: #555; }
+
+  .field textarea {
+    width: 100%; background: #1a1a1a; border: 1px solid #333; border-radius: 4px;
+    padding: 12px 14px; font-size: 14px; color: #fff; font-family: Arial, sans-serif;
+    transition: border-color 0.15s; outline: none; resize: vertical; min-height: 80px;
+  }
+  .field textarea:focus { border-color: #f5c800; }
+  .field textarea::placeholder { color: #555; }
+
+  .redaktion-note {
+    background: #1a1a1a; border-left: 3px solid #f5c800; padding: 12px 16px;
+    font-size: 13px; color: #ccc; font-family: Arial, sans-serif; font-weight: normal;
+    line-height: 1.6; margin-bottom: 24px; border-radius: 0 4px 4px 0;
+  }
+  .redaktion-note strong { color: #fff; }
+
+  .submit-btn {
+    width: 100%; background: #f5c800; color: #111; border: none; border-radius: 4px;
+    padding: 18px; font-size: 15px; font-weight: 900; text-transform: uppercase;
+    letter-spacing: 1px; cursor: pointer; transition: background 0.15s;
+    font-family: 'Arial Black', Arial, sans-serif;
+  }
+  .submit-btn:hover { background: #ffd700; }
+
+  .pladser-note {
+    text-align: center; font-size: 12px; color: #888;
+    font-family: Arial, sans-serif; margin-top: 14px; line-height: 1.5;
+  }
+  .pladser-note strong { color: #bbb; }
+
+  .success-screen { display: none; text-align: center; padding: 60px 24px; }
+  .success-icon {
+    width: 64px; height: 64px; background: #f5c800; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 24px; font-size: 28px; color: #111;
+  }
+  .success-title { font-size: 24px; font-weight: 900; text-transform: uppercase; margin-bottom: 12px; }
+  .success-txt { font-size: 14px; color: #ccc; font-family: Arial, sans-serif; font-weight: normal; line-height: 1.7; }
+
+  .footer {
+    border-top: 1px solid #1a1a1a; padding: 24px; text-align: center;
+    font-size: 12px; color: #666; font-family: Arial, sans-serif;
+  }
+  .footer a { color: #888; text-decoration: none; }
+
+  @media (max-width: 480px) {
+    .formats { grid-template-columns: 1fr; }
+    .form-grid { grid-template-columns: 1fr; }
+    .form-grid .full { grid-column: 1; }
+    .hero-dates { flex-direction: column; gap: 12px; }
+    .reach-strip { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-label">Et tematillæg i Mester&amp;Svend og BygTek</div>
+  <div class="hero-title">Sikkerhedssko<br><span>&amp; Arbejdsbeklædning</span></div>
+  <div class="hero-sub">Reservér din annonceplads</div>
+  <div class="hero-dates">
+    <div class="hero-date">
+      <div class="d-label">Mester &amp; Svend</div>
+      <div class="d-val">23. september</div>
+    </div>
+    <div class="hero-date">
+      <div class="d-label">BygTek</div>
+      <div class="d-val">7. oktober</div>
+    </div>
+    <div class="hero-date">
+      <div class="d-label">Online</div>
+      <div class="d-val">BygTek.dk</div>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+
+  <div class="reach-strip">
+    <div class="reach-item">
+      <div class="reach-num">60.000</div>
+      <div class="reach-txt">professionelle læsere på tværs af print og BygTek.dk</div>
+    </div>
+    <div class="reach-item">
+      <div class="reach-num">2</div>
+      <div class="reach-txt">fagblade — Mester&amp;Svend og BygTek</div>
+    </div>
+    <div class="reach-item">
+      <div class="reach-num">1</div>
+      <div class="reach-txt">udgivelse — kom med fra starten</div>
+    </div>
+  </div>
+
+  <div id="form-section">
+    <div class="section-label" style="margin-bottom:16px">Vælg format</div>
+    <div class="formats">
+      <div class="format-card" id="card-helside" onclick="selectFormat('helside')">
+        <input type="radio" name="format" value="helside">
+        <div class="format-check" id="check-helside"><div class="format-check-dot"></div></div>
+        <div class="format-name">Helside</div>
+        <div class="format-type">Annonce eller advertorial</div>
+        <div class="format-price">8.000 kr.</div>
+        <div class="format-price-sub">pr. indrykning i begge fagblade</div>
+      </div>
+      <div class="format-card" id="card-halvside" onclick="selectFormat('halvside')">
+        <input type="radio" name="format" value="halvside">
+        <div class="format-check" id="check-halvside"><div class="format-check-dot"></div></div>
+        <div class="format-name">Halvside</div>
+        <div class="format-type">Annonce</div>
+        <div class="format-price">6.000 kr.</div>
+        <div class="format-price-sub">pr. indrykning i begge fagblade</div>
+      </div>
+    </div>
+
+    <div class="redaktion-note">
+      <strong>Har I ikke teksten klar?</strong> Vores redaktion hjælper gerne med idé, tekst og opsætning. Skriv blot en note nedenfor.
+    </div>
+
+    <div class="section-label">Dine oplysninger</div>
+    <div class="form-grid">
+      <div class="field">
+        <label>Navn</label>
+        <input type="text" id="navn" placeholder="Dit navn">
+      </div>
+      <div class="field">
+        <label>Virksomhed</label>
+        <input type="text" id="virksomhed" placeholder="Firmanavn">
+      </div>
+      <div class="field">
+        <label>Telefon</label>
+        <input type="tel" id="telefon" placeholder="Dit telefonnummer">
+      </div>
+      <div class="field">
+        <label>Email</label>
+        <input type="email" id="email" placeholder="Din emailadresse">
+      </div>
+      <div class="field full">
+        <label>Besked (valgfri)</label>
+        <textarea id="besked" placeholder="Spørgsmål, ønsker eller om I har brug for hjælp til tekst..."></textarea>
+      </div>
+    </div>
+
+    <button class="submit-btn" onclick="sendReservation()">Reservér din plads nu</button>
+    <div class="pladser-note"><strong>Begrænset antal pladser</strong> — fordeles efter først til mølle</div>
+  </div>
+
+  <div class="success-screen" id="success-screen">
+    <div class="success-icon">✓</div>
+    <div class="success-title">Tak for din reservation</div>
+    <div class="success-txt">
+      Din forespørgsel er sendt til Kim Anker.<br>
+      Du hører fra os inden for 1–2 hverdage.<br><br>
+      <span style="color:#f5c800">Kim Anker · kim@odsgard.dk · 26 25 51 22</span>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  Odsgard A/S · Næverland 8, 2600 Glostrup · <a href="mailto:kim@odsgard.dk">kim@odsgard.dk</a> · 26 25 51 22
+</div>
+
+<script>
+  let selectedFormat = null;
+  let animating = true;
+  let animFrame = null;
+
+  const cardH = document.getElementById('card-helside');
+  const cardV = document.getElementById('card-halvside');
+  const checkH = document.getElementById('check-helside');
+  const checkV = document.getElementById('check-halvside');
+  const dotH = checkH.querySelector('.format-check-dot');
+  const dotV = checkV.querySelector('.format-check-dot');
+
+  // Cycle: 20 seconds total
+  // 0.00–0.25 : helside fades in slowly
+  // 0.25–0.40 : helside holds at peak
+  // 0.40–0.50 : helside fades out
+  // 0.50–0.55 : pause — both invisible
+  // 0.55–0.75 : halvside fades in slowly
+  // 0.75–0.90 : halvside holds at peak
+  // 0.90–1.00 : halvside fades out, pause before restart
+
+  const CYCLE = 20000; // ms
+  const MAX_STRENGTH = 0.45; // subtle — never fully opaque
+
+  function easeInOut(t) {
+    return t < 0.5 ? 2*t*t : -1+(4-2*t)*t;
+  }
+
+  function applyGlow(card, check, dot, strength) {
+    if (strength < 0.005) {
+      card.style.borderColor = '#2a2a2a';
+      card.style.background = '#1a1a1a';
+      card.style.boxShadow = 'none';
+      check.style.background = 'transparent';
+      check.style.borderColor = '#444';
+      dot.style.opacity = '0';
+    } else {
+      card.style.borderColor = `rgba(245,200,0,${strength})`;
+      card.style.background = `rgba(31,28,0,${strength * 0.7})`;
+      card.style.boxShadow = `0 0 ${Math.round(strength*20)}px ${Math.round(strength*6)}px rgba(245,200,0,${(strength*0.3).toFixed(3)})`;
+      check.style.background = `rgba(245,200,0,${strength})`;
+      check.style.borderColor = strength > 0.15 ? `rgba(245,200,0,${strength})` : '#444';
+      dot.style.opacity = strength > 0.2 ? (strength * 1.5).toFixed(2) : '0';
+    }
+  }
+
+  function runAnimation(ts) {
+    if (!animating) return;
+    const t = (ts % CYCLE) / CYCLE;
+
+    let sH = 0, sV = 0;
+
+    if (t < 0.25) {
+      sH = easeInOut(t / 0.25) * MAX_STRENGTH;
+    } else if (t < 0.40) {
+      sH = MAX_STRENGTH;
+    } else if (t < 0.50) {
+      sH = easeInOut(1 - (t - 0.40) / 0.10) * MAX_STRENGTH;
+    } else if (t < 0.55) {
+      sH = 0; sV = 0;
+    } else if (t < 0.75) {
+      sV = easeInOut((t - 0.55) / 0.20) * MAX_STRENGTH;
+    } else if (t < 0.90) {
+      sV = MAX_STRENGTH;
+    } else {
+      sV = easeInOut(1 - (t - 0.90) / 0.10) * MAX_STRENGTH;
+    }
+
+    applyGlow(cardH, checkH, dotH, sH);
+    applyGlow(cardV, checkV, dotV, sV);
+
+    animFrame = requestAnimationFrame(runAnimation);
+  }
+
+  animFrame = requestAnimationFrame(runAnimation);
+
+  function selectFormat(format) {
+    animating = false;
+    if (animFrame) cancelAnimationFrame(animFrame);
+    selectedFormat = format;
+
+    // Clear inline styles
+    [cardH, cardV].forEach(el => {
+      el.style.borderColor = '';
+      el.style.background = '';
+      el.style.boxShadow = '';
+    });
+    [checkH, checkV].forEach(el => {
+      el.style.background = '';
+      el.style.borderColor = '';
+    });
+    dotH.style.opacity = '';
+    dotV.style.opacity = '';
+
+    cardH.className = 'format-card ' + (format === 'helside' ? 'locked-on' : 'locked-off');
+    cardV.className = 'format-card ' + (format === 'halvside' ? 'locked-on' : 'locked-off');
+    document.querySelector('input[value="' + format + '"]').checked = true;
+  }
+
+  function sendReservation() {
+    const navn = document.getElementById('navn').value.trim();
+    const virksomhed = document.getElementById('virksomhed').value.trim();
+    const telefon = document.getElementById('telefon').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const besked = document.getElementById('besked').value.trim();
+
+    if (!navn || !virksomhed || !telefon || !email) {
+      alert('Udfyld venligst navn, virksomhed, telefon og email.');
+      return;
+    }
+
+    const valgt = selectedFormat || 'helside';
+    const formatTekst = valgt === 'helside'
+      ? 'Helside (annonce eller advertorial) — 8.000 kr.'
+      : 'Halvside — 6.000 kr.';
+
+    const subject = encodeURIComponent('Reservation — Sikkerhedssko & Arbejdsbeklædning');
+    const body = encodeURIComponent(
+      'Hej Kim,\n\n' +
+      'Jeg vil gerne reservere en plads i tillægget Sikkerhedssko & Arbejdsbeklædning.\n\n' +
+      'Format: ' + formatTekst + '\n\n' +
+      'Navn: ' + navn + '\n' +
+      'Virksomhed: ' + virksomhed + '\n' +
+      'Telefon: ' + telefon + '\n' +
+      'Email: ' + email + '\n' +
+      (besked ? '\nBesked: ' + besked + '\n' : '') +
+      '\nMed venlig hilsen\n' + navn
+    );
+
+    window.location.href = 'mailto:kim@odsgard.dk?subject=' + subject + '&body=' + body;
+
+    document.getElementById('form-section').style.display = 'none';
+    document.getElementById('success-screen').style.display = 'block';
+  }
+</script>
+
+</body>
+</html>
